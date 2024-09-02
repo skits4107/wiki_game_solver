@@ -52,13 +52,16 @@ def get_path(predecessors, final_article):
     path.reverse()
     return path
 
-def bfs_wiki_game_solver(starting_article, ending_article):
-    queue = deque([starting_article])
+def bfs_wiki_game_solver(starting_article, ending_article, max_depth=2):
+    queue = deque([(starting_article, 0)])
 
     predecessors = {starting_article: None}
 
     while queue:
-        current_article = queue.popleft()
+        current_article, depth = queue.popleft()
+
+        if depth > max_depth:
+            continue
 
         if current_article.lower() == ending_article.lower():
             path = get_path(predecessors, ending_article)
@@ -68,7 +71,7 @@ def bfs_wiki_game_solver(starting_article, ending_article):
         for neighbor in neighbors:
             if neighbor not in predecessors:
                 predecessors[neighbor] = current_article
-                queue.append(neighbor)
+                queue.append((neighbor, depth+1))
 
     return None
 
